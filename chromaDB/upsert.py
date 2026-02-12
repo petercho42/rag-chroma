@@ -1,11 +1,5 @@
-import chromadb
+from database import collection
 
-# 1. Initialize the client (This creates a local database in memory)
-client = chromadb.Client()
-
-# 2. Create a collection (Think of this as your "Table")
-# We'll call it "my_rag_docs"
-collection = client.create_collection(name="my_rag_docs")
 
 # 3. Add your chunks from this morning
 # Note: ChromaDB can handle the "Embedding" for you automatically using

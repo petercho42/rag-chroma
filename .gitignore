@@ -27,3 +27,7 @@ build/
 
 # dotenv / secrets
 .env
+
+# Local ChromaDB storage
+**/persistent_storage/
+**/chroma_data/
