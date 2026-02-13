@@ -21,5 +21,11 @@ collection.add(
 )
 
 collection.update(ids=["id1"], metadatas=[{"type": "technology", "updated": True}])
+collection.update(
+    ids=["id1"],
+    documents=[
+        "The Apple iPhone 16 features a titanium frame and a new Recycled Cheese chip."
+    ],
+)
 
 print("Collection created and data 'Upserted'!")
