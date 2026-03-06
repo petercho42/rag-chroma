@@ -45,4 +45,4 @@ def process_and_upload(file_path):
 
 if __name__ == "__main__":
     # Test it with one file in your source_docs folder
-    process_and_upload("./source_docs/my_workout_guide.pdf")
+    process_and_upload("./chromaDB/source_docs/NIPS-2017-attention-is-all-you-need-Paper.pdf")
