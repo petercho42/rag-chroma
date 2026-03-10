@@ -4,20 +4,25 @@ import chromadb
 # 1. SETUP
 CHROMA_HOST = 'localhost'
 CHROMA_PORT = 8001
-# OLLAMA_MODEL = "deepseek-r1:32b" # Your heavy hitter
-OLLAMA_MODEL = "qwen2.5:32b"
+OLLAMA_MODEL = "deepseek-r1:32b" # Your heavy hitter
+# OLLAMA_MODEL = "qwen2.5:32b"
 
 chroma_client = chromadb.HttpClient(host=CHROMA_HOST, port=CHROMA_PORT)
 ollama_client = ollama.Client(host='http://localhost:11434')
 
 collection = chroma_client.get_collection(name="personal_knowledge_base")
 
-def generate_rag_answer(question):
-    # STEP A: Embed the question
+def generate_targeted_answer(question, target_pages=[0, 1, 10, 11]):
     query_embed = ollama_client.embeddings(model="nomic-embed-text", prompt=question)['embedding']
 
-    # STEP B: Retrieve Top 3 chunks
-    results = collection.query(query_embeddings=[query_embed], n_results=10)
+    # This is the "Sniper" part:
+    # We tell Chroma only to return chunks where the 'page' is in our list
+    results = collection.query(
+        query_embeddings=[query_embed],
+        n_results=5,
+        where={"page": {"$in": target_pages}} 
+    )
+
     context = "\n\n".join(results['documents'][0])
 
     # STEP C: Create the "Augmented" Prompt
@@ -43,5 +48,5 @@ def generate_rag_answer(question):
     print(response['response'])
 
 if __name__ == "__main__":
-    user_q = "What is the main benefit of the Transformer architecture?"
-    generate_rag_answer(user_q)
+    user_q = "According to the Introduction of this paper, what were the main limitations of previous models?"
+    generate_targeted_answer(user_q)

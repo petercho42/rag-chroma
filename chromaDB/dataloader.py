@@ -28,17 +28,17 @@ def process_and_upload(file_path):
 
     # STEP C: Mac coordinates the 3090's work
     for i, chunk in enumerate(chunks):
-        # 3090 turns text into math
-        embed_resp = ollama_client.embeddings(
-            model="nomic-embed-text", prompt=chunk.page_content
-        )
+        embed_resp = ollama_client.embeddings(model="nomic-embed-text", prompt=chunk.page_content)
+        
+        # We extract the page number from LangChain's chunk metadata
+        page_num = chunk.metadata.get("page", 0) 
 
-        # Mac tells 3090 to store it
         collection.add(
             ids=[f"{file_path}_{i}"],
             embeddings=[embed_resp["embedding"]],
             documents=[chunk.page_content],
-            metadatas=chunk.metadata,
+            # We store the page number so we can filter by it later!
+            metadatas=[{"page": page_num, "source": file_path}] 
         )
     print(f"Successfully indexed: {file_path}")
 
